@@ -68,13 +68,11 @@ void loop()
 		break;
 
 	case STATE_CONNECT:
-//	Serial.printlnf("serverAddr=%s serverPort=%u nonce=%s", serverAddr.toString().c_str(), serverPort, nonce);
 		if (client.connect(serverAddr, serverPort)) {
 		    Serial.println("Connected");
 		    state = STATE_SEND_DATA;
 		}
 		else {
-			//state = STATE_RETRY_WAIT;
 			Serial.println("Unable to Connect");
 			Serial.println(WiFi.localIP());
 			stateTime = millis();
@@ -100,7 +98,6 @@ void loop()
 
 	case STATE_RETRY_WAIT:
 		if (millis() - stateTime >= RETRY_WAIT_MS) {
-			//state = STATE_REQUEST;
 			Serial.printlnf("Entered STATE RETRY WAIT and Next State will be STATE_SELF_EXECUTION");
 			state = STATE_SELF_EXECUTION;
 		}
@@ -135,12 +132,6 @@ void sendData(void) {
               output ();
               z = 1;
             }
-            /*else if ((inmsg[0] = 'C')|| (inmsg[1] = 'O') || (inmsg[2] = 'M')|| (inmsg[3] = 'P') || (inmsg[4] = 'L')|| (inmsg[5] = 'E') || (inmsg[6] = 'T')|| (inmsg[7] = 'E'))
-            {
-               Serial.printlnf("Trying Output with Alternative Method");
-               output ();
-               z = 1;
-            }*/
 
 	}
 	Serial.printlnf("Out of output loop and now wating to send new data");
@@ -162,24 +153,27 @@ void receive_data(char *ptr)
 Serial.printlnf("Out of Receiving Loop");
 }
 
-void output ()
-{
+void output (){
     Serial.println("Entered RGB Control Loop");
     RGB.control(true);
-    RGB.color(0, 0, 255);
-    for (int k=200;k>3;k -= 35)
-    {
-        RGB.brightness(k);
-        delay(500);
+    RGB.color(255, 0, 0);
+    for(int j=0; j<4;j++){
+        for(int i=0; i<=255; i++)
+        {
+            RGB.brightness(i);
+        }
+        for(int i=255; i>0; i--)
+        {
+            RGB.brightness(i);
+        }
     }
     RGB.brightness(255);
     RGB.control(false);
 }
 
-
 void fibonacci_pi()
 {
-
+	output();
 	//Here we evaluate which function can the server give to us, in this case is FIBONACCI
 	receive_data(inmsg);
 	Serial.printlnf("inmsg");
@@ -200,22 +194,6 @@ void fibonacci_pi()
 	client.printf("%d\n", value);
 	Serial.printlnf("The value at the end is %d and Now Calculating the Value of pi", c);
 
-  /*double width, sum, x;
-  int intervals, i;
-  // get the number of intervals
-  intervals = 100;
-  width = 1.0 / intervals;
-
-  //do the computation
-  sum = 0;
-  for (i=0; i<intervals; ++i)
-  {
-     x = (i + 0.5) * width;
-    sum += 4.0 / (1.0 + x * x);
-  }
-  sum *= width; //multiply assign operator, x *= y  equals to x = x*y
-
-  Serial.printlnf("Estimation of pi is %f\n", sum);*/
   delay(1000);
   Serial.println("Application Done, Now look for the Server");
  }
