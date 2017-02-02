@@ -176,18 +176,25 @@ void output ()
 
 void fibonacci_pi()
 {
+
+	//Here we evaluate which function can the server give to us, in this case is FIBONACCI
+	receive_data(inmsg);
+	Serial.printlnf("inmsg");
+	myInStr = inmsg;
+	if (myInStr.indexOf(ServerFibo)  >= 0)
+	{
     Serial.println("Executing Fibonacci Sequence");
     int  a = 0;
 	int  b = 1;
 	int  c, j ;
-	//int value = 5;
-		for (j=0;j<value;j++)
-		{
+	for (j=0;j<value;j++)
+	{
 			c = a + b;
 			a = b;
 			b = c;
 			Serial.printlnf("The value in the %d (from %d) loop is %d",j,value,c);
-		}
+	}
+	client.printf("%d\n", value);
 	Serial.printlnf("The value at the end is %d and Now Calculating the Value of pi", c);
 
   /*double width, sum, x;
@@ -208,6 +215,7 @@ void fibonacci_pi()
   Serial.printlnf("Estimation of pi is %f\n", sum);*/
   delay(1000);
   Serial.println("Application Done, Now look for the Server");
+ }
 }
 // This is the handler for the Particle.function "devices"
 // The server makes this function call after this device publishes a devicesRequest event.
