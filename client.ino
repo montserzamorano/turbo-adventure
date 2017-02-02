@@ -12,6 +12,9 @@ const unsigned long SEND_WAIT_MS = 20;
 uint32_t lastTime;
 char inmsg[512];
 const char replymsg[60] = "COMPLETED";
+const char ServerFibo[60] = "FIBONACCI";
+const char ServerPi[60] = "PI";
+
 String myInStr;
 const int value = 5;
 
