@@ -1,0 +1,3 @@
+-Que el cliente compruebe que el servidor tiene los mismos servicios (self-execution inutil?)
+-Calcular valor de pi.
+-Que el cliente mande el valor al servidor y no 
