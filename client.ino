@@ -38,10 +38,6 @@ void loop()
 {
 
 	switch(state) {
-	case STATE_SELF_EXECUTION:
-	        fibonacci_pi();
-	        state = STATE_SERVICES;
-	        break;
 
 	case STATE_SERVICES:
 		if (Particle.connected()) {
@@ -70,13 +66,15 @@ void loop()
 	case STATE_CONNECT:
 		if (client.connect(serverAddr, serverPort)) {
 		    Serial.println("Connected");
+				fibonacci();
+				Pi();
 		    state = STATE_SEND_DATA;
 		}
 		else {
 			Serial.println("Unable to Connect");
 			Serial.println(WiFi.localIP());
 			stateTime = millis();
-			state = STATE_SELF_EXECUTION;
+			state = STATE_CONNECT;
 		}
 		break;
 
@@ -171,12 +169,12 @@ void output (){
     RGB.control(false);
 }
 
-void fibonacci_pi()
+void fibonacci()
 {
 	output();
 	//Here we evaluate which function can the server give to us, in this case is FIBONACCI
 	receive_data(inmsg);
-	Serial.printlnf("inmsg");
+	Serial.printlnf(inmsg);
 	myInStr = inmsg;
 	if (myInStr.indexOf(ServerFibo)  >= 0)
 	{
@@ -189,14 +187,41 @@ void fibonacci_pi()
 			c = a + b;
 			a = b;
 			b = c;
-			Serial.printlnf("The value in the %d (from %d) loop is %d",j,value,c);
+			Serial.printlnf("The value in the %d (from %d) FIB loop is %d",j,value,c);
+			delay(1000);
 	}
 	client.printf("%d\n", value);
 	Serial.printlnf("The value at the end is %d and Now Calculating the Value of pi", c);
 
   delay(1000);
-  Serial.println("Application Done, Now look for the Server");
  }
+}
+
+void Pi()
+{
+	receive_data(inmsg);
+	Serial.printlnf(inmsg);
+	myInStr = inmsg;
+	if (myInStr.indexOf(ServerPi)  >= 0)
+	{
+		Serial.println("Executing Pi Sequence");
+		var width;
+		var sum;
+		var intervals;
+		var  i;
+		intervals = 25;
+		width = 1.0 / intervals;
+
+		sum = 0;
+		for (i=0; i<intervals; i++)
+		{
+				 x = (i + 0.5) * width;
+				 sum += 4.0 / (1.0 + x * x);
+		}
+		sum *= width;
+		Serial.printlnf("The value in the %d (from %d) PI loop is %d",i,intervals,sum);
+		delay(1000);
+  }
 }
 // This is the handler for the Particle.function "devices"
 // The server makes this function call after this device publishes a devicesRequest event.
@@ -221,3 +246,4 @@ int handlerequests(String data)
 	}
 	return 0;
 }
+
