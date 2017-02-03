@@ -155,14 +155,16 @@ void output (){
     Serial.println("Entered RGB Control Loop");
     RGB.control(true);
     RGB.color(255, 0, 0);
-    for(int j=0; j<4;j++){
+    for(int j=0; j<7;j++){
         for(int i=0; i<=255; i++)
         {
             RGB.brightness(i);
+            delay(1);
         }
         for(int i=255; i>0; i--)
         {
             RGB.brightness(i);
+            delay(1);
         }
     }
     RGB.brightness(255);
