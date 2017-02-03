@@ -204,6 +204,7 @@ net.createServer(function(sock) {
 		console.log('Now I Am telling to the client that my service is Fibonacci right now');
 		sock.write(clientmsg_1);
 		console.log('Waiting for his values to continue the task...');
+	    	sock.read(data);
 		console.log('The Received value for FIB Sequence: '+ data);
 		var b=a=0;
 		var  a = data;
@@ -227,6 +228,7 @@ net.createServer(function(sock) {
 	console.log('Now our services have changed to Pi');
 	sock.write(clientmsg_2);
 	console.log('Waiting for his values to continue the task...');
+	sock.read(data);
 	console.log('The Received value for Pi Sequence: '+ data);
 	{
 		//console.log('DATA '+ ' - ' + data);
