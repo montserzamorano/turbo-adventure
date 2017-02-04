@@ -1,4 +1,5 @@
 #include "Particle.h"
+#include "Integer.h"
 
 SYSTEM_THREAD(ENABLED);
 
@@ -9,6 +10,7 @@ const unsigned long REQUEST_WAIT_MS = 10000;
 const unsigned long RETRY_WAIT_MS = 10000;
 const unsigned long SEND_WAIT_MS = 20;
 
+//!!
 uint32_t lastTime;
 char inmsg[512];
 const char replymsg[60] = "COMPLETED";
@@ -103,36 +105,39 @@ void loop()
 	}
 }
 
-void sendData(void) {
+void sendData(int *data1, int *data2) {
 
     int z = 0;
-	client.printf("%d\n", value);
+	client.printf("%d\n", data1);
+	client.printf("%d\n", data2);
 	delay(1000); //Required to avoid receiving garbage values
-	Serial.printlnf("Sent the parameter and now going to sleep for 60 Seconds");
+	Serial.printlnf("Sent the parameter and now going to sleep for a few Seconds");
 	delay(5000);
 	System.sleep(D0,RISING,20,SLEEP_NETWORK_STANDBY);
 	delay(10000);
 	Serial.printlnf("Awake and Now going to Receive the data from the Server");
 	receive_data(inmsg);
-	Serial.printlnf("inmsg");
+	Serial.printlnf(inmsg);
 	myInStr = inmsg;
 	Serial.printlnf("Printing My instr");
 	Serial.printlnf(myInStr);
-	 if(z == 0)
-	 {
-	 Serial.printlnf("Entered Output loop");
 
 	 					//Here we see if what has been sent is the word COMPLETED
-            if (myInStr.indexOf(replymsg)  >= 0)
-            {
-							Serial.printlnf("Server has sent to us the last value and the task has been COMPLETED");
-              Serial.printlnf("Trying Breathing Leds now");
-              output ();
-              z = 1;
-            }
+  if (myInStr.indexOf(replymsg)  >= 0)
+    {
+			Serial.printlnf("Server has sent to us the last value and the task has been COMPLETED");
+      Serial.printlnf("Trying Breathing Leds now");
 
+    }
+	else
+	{
+		Serial.printlnf("Task has not been finished yet...So we continue it");
+		receive_data(inmsg);
+		data1=inmsg;
+		receive_data(inmsg);
+		data2=inmsg;
 	}
-	Serial.printlnf("Out of output loop and now wating to send new data");
+
 	delay(1000);
 
 }
@@ -155,16 +160,14 @@ void output (){
     Serial.println("Entered RGB Control Loop");
     RGB.control(true);
     RGB.color(255, 0, 0);
-    for(int j=0; j<7;j++){
+    for(int j=0; j<4;j++){
         for(int i=0; i<=255; i++)
         {
             RGB.brightness(i);
-            delay(1);
         }
         for(int i=255; i>0; i--)
         {
             RGB.brightness(i);
-            delay(1);
         }
     }
     RGB.brightness(255);
@@ -182,8 +185,8 @@ void fibonacci()
 	{
     Serial.println("Executing Fibonacci Sequence");
     int  a = 0;
-	int  b = 1;
-	int  c, j ;
+	  int  b = 1;
+	  int  c, j;
 	for (j=0;j<value;j++)
 	{
 			c = a + b;
@@ -191,8 +194,11 @@ void fibonacci()
 			b = c;
 			Serial.printlnf("The value in the %d (from %d) FIB loop is %d",j,value,c);
 			delay(1000);
+			if(j==counter){
+				Serial.printlnf("I am going to sleep now, sending the last data calculated...");
+				sendData(a,b);
+			}
 	}
-	client.printf("%d\n", value);
 	Serial.printlnf("The value at the end is %d and Now Calculating the Value of pi", c);
 
   delay(1000);
@@ -207,8 +213,8 @@ void Pi()
 	if (myInStr.indexOf(ServerPi)  >= 0)
 	{
 		Serial.println("Executing Pi Sequence");
-		var width;
-		var sum;
+		int width;
+		int sum;
 		var intervals;
 		var  i;
 		intervals = 25;
@@ -248,4 +254,5 @@ int handlerequests(String data)
 	}
 	return 0;
 }
+
 
