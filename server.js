@@ -201,13 +201,14 @@ net.createServer(function(sock) {
 		//sock.on('data', function(data)
 		//{
 		//console.log('Entered to calculate the value of Fibonacci Sequence');
-		console.log('Now I Am telling to the client that my service is Fibonacci right now');
+		console.log('Now I Am telling to the client that my service is Fibonacci');
 		sock.write(clientmsg_1);
 		console.log('Waiting for his values to continue the task...');
-	    	sock.read(data);
+		sock.read(data1);
+		sock.read(data2);
 		console.log('The Received value for FIB Sequence: '+ data);
-		var b=a=0;
-		var  a = data;
+		var  a = data1;
+		var  b = data2;
 		if(data==5)
 		var b = 3;
 		else if(data==8)
@@ -345,3 +346,4 @@ net.createServer(function(sock) {
 
 	response.write('Hello');
 }*/
+
