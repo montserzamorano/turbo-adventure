@@ -177,8 +177,8 @@ var PORT = server.serverPort;
 var replymsg_1 = 'COMPLETED';
 var replymsg_2 = 'COMPLETED PI';
 
-var clientmsg_1 = 'FIBONACCI';
-var clientmsg_2 = 'PI';
+var clientmsg_1 = 'CALCULATE FIBONACCI';
+var clientmsg_2 = 'CALCULATE PI';
 //var clientmsg = 100;
 
 // Create a server instance, and chain the listen function to it
@@ -193,104 +193,31 @@ net.createServer(function(sock) {
     sock.on('data', function(data)
 	{
 
-        //console.log('RECEIVED DATA, Have to match Condition ' + sock.remoteAddress +':'+ sock.remotePort + ' - ' + data);
-	//if (firstApp)
-	//
-		//console.log('DATA '+ ' - ' + data);
-		//console.log('Matched the Fibonacci Sequence');
-		//sock.on('data', function(data)
-		//{
-		//console.log('Entered to calculate the value of Fibonacci Sequence');
-		console.log('Now I Am telling to the client that my service is Fibonacci');
-		sock.write(clientmsg_1);
-		console.log('Waiting for his values to continue the task...');
-		sock.read(data1);
-		sock.read(data2);
 		console.log('The Received value for FIB Sequence: '+ data);
-		var  a = data1;
-		var  b = data2;
-		if(data==5)
-		var b = 3;
-		else if(data==8)
-		var b = 5;
+		var  a = 0;
+		var b = parseInt(data);
 		var c, i ;
+		if(b==5)
+			a=3;
+		else if(b==8)
+			b=5;
 		for (i=0;i<data;i++)
 		{
 			c = a + b;
-			//console.log("The value of c is " + c);
+			console.log("The value of c is " + c);
 			a = b;
 			b = c;
 		}
-		console.log("The Last Computed value of FIB Sequence: " + c);
+		console.log('The Last Computed value of FIB Sequence: ' + c);
+		console.log('Sending message to the client:COMPLETED');
 		sock.write(replymsg_1);
-		//});
-	//}
-
-	console.log('Now our services have changed to Pi');
-	sock.write(clientmsg_2);
-	console.log('Waiting for his values to continue the task...');
-	sock.read(data);
-	console.log('The Received value for Pi Sequence: '+ data);
-	{
-		//console.log('DATA '+ ' - ' + data);
-		console.log('Matched to calculate the value of pi');
-		//sock.on('data', function(data_3)
-		//{
-		console.log('Entered to calculate the value of Fibonacci Sequence');
-		//console.log('data');
-		var width;
-		var sum;
-		var intervals;
-		var  i;
-		intervals = 25;
-		width = 1.0 / intervals;
-
-		sum = 0;
-		for (i=0; i<intervals; i++)
-		{
-         x = (i + 0.5) * width;
-         sum += 4.0 / (1.0 + x * x);
-		}
-		sum *= width;
-		console.log("The Computed value of sum is " + sum);
-		//sock.write(replymsg);
-		sock.write(replymsg_2);
-		//});
-	}
-
-
-
-		//sock.write(replymsg);
-	/*if (data == clientmsg)
-	{		//Doing Some Computations
-		var x = 0;;
-		for (var k=data;k<1000;k++)
-		{
-			x = k+1;
-		}
-		console.log("the value for x is" + x );
-        // Write the data back to the socket, the client will receive it as data from the server
-		console.log("Sending the Reply Message");
-		//var rep = 'k';
-		//console.log("The reply message is" + k);
-		//sock.write(k);
-		//var value = 50;
-		//server.printf("%d\n", clientmsg);
-        //sock.write(replymsg);
-		sock.write(data);
-		sock.write('You said "' + data + '"');
-	}*/
-		//console.log("Not Sending the Reply Message");
-    });
+});
 
 
 
 
     sock.on('error', function (error) {
         console.log('******* ERROR ' + error + ' *******');
-
-        // close connection
- //       sock.end();
     });
 
 
@@ -330,20 +257,3 @@ net.createServer(function(sock) {
 	};
 
 }(module.exports));
-
-
-
-/*function handleApi(request, response, partialUrl)
-{
-	var headers = {
-			'Content-Type': 'text/json',
-			'Cache-Control': 'no-cache'
-	};
-	response.write('AMAN');
-	response.writeHead(200, headers);
-
-	console.log("handle api ", partialUrl);
-
-	response.write('Hello');
-}*/
-
